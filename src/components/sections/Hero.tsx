@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 
 const column1Images = [
   'https://source.unsplash.com/800x600/?salsa-dance',
@@ -80,11 +81,13 @@ export default function Hero() {
                   key={`col1-${index}`}
                   className="w-full aspect-[4/3] rounded-3xl overflow-hidden shadow-lg transform transition-transform hover:scale-105"
                 >
-                  <img 
-                    src={img} 
+                  <Image
+                    src={img}
                     alt={`Dance ${index + 1}`}
+                    layout="fill"
+                    objectFit="cover"
                     className="w-full h-full object-cover"
-                  />
+                  />  
                 </div>
               ))}
             </div>
@@ -101,11 +104,13 @@ export default function Hero() {
                   key={`col2-${index}`}
                   className="w-full aspect-[4/3] rounded-3xl overflow-hidden shadow-lg transform transition-transform hover:scale-105"
                 >
-                  <img 
-                    src={img} 
+                  <Image
+                    src={img}
                     alt={`Dance ${index + 1}`}
+                    layout="fill"
+                    objectFit="cover"
                     className="w-full h-full object-cover"
-                  />
+                  />  
                 </div>
               ))}
             </div>

@@ -1,11 +1,10 @@
 [build]
-  command = "npm install && npm run build"
-  # For SSR, use the .next folder (Netlify’s Next.js plugin will handle dynamic routes).
-  # For static export, use "out" (and change the build command accordingly).
-  publish = ".next"
+command = "npm install && npm run build"
+# For Next.js projects using SSR with the Netlify Next.js plugin, publish is set to .next
+publish = ".next"
 
 [build.environment]
-  NODE_VERSION = "16"
+NODE_VERSION = "18"
 
 [[plugins]]
-  package = "@netlify/plugin-nextjs"
+package = "@netlify/plugin-nextjs"
