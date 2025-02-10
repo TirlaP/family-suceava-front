@@ -5,21 +5,21 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 
 const column1Images = [
-  'https://source.unsplash.com/800x600/?salsa-dance',
-  'https://source.unsplash.com/800x600/?bachata-dance',
-  'https://source.unsplash.com/800x600/?kizomba-dance',
-  'https://source.unsplash.com/800x600/?ballroom-dance',
-  'https://source.unsplash.com/800x600/?latin-dance',
-  'https://source.unsplash.com/800x600/?couple-dance',
+  '/salsa.jpg',
+  '/salsa.jpg',
+  '/salsa.jpg',
+  '/salsa.jpg',
+  '/salsa.jpg',
+  '/salsa.jpg',
 ];
 
 const column2Images = [
-  'https://source.unsplash.com/800x600/?dancing',
-  'https://source.unsplash.com/800x600/?dance-studio',
-  'https://source.unsplash.com/800x600/?dance-class',
-  'https://source.unsplash.com/800x600/?dancers',
-  'https://source.unsplash.com/800x600/?dance-performance',
-  'https://source.unsplash.com/800x600/?dance-show',
+  '/salsa.jpg',
+  '/salsa.jpg',
+  '/salsa.jpg',
+  '/salsa.jpg',
+  '/salsa.jpg',
+  '/salsa.jpg',
 ];
 
 export default function Hero() {
