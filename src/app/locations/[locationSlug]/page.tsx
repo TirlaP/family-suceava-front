@@ -165,7 +165,7 @@ export default function LocationSlugPage({ params }: LocationSlugPageProps) {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="-mt-16 min-h-screen bg-gray-50">
       {/* Hero Section */}
       <div className="relative h-[50vh] min-h-[400px]">
         {image?.data ? (
