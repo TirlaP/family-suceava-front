@@ -165,7 +165,7 @@ export default function ClassesSection({ classes }: ClassesSectionProps) {
             size="lg"
             className="bg-purple-600 hover:bg-purple-700 text-white px-8 py-6 rounded-full text-lg font-medium shadow-lg hover:shadow-xl transition-all duration-300"
           >
-            <Link href="/classes">Vezi toate cursurile</Link>
+            <Link href="/courses">Vezi toate cursurile</Link>
           </Button>
         </motion.div>
       </div>
