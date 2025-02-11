@@ -7,102 +7,125 @@ import TestimonialsSection from "@/components/sections/TestimonialsSection";
 import ContactSection from "@/components/sections/ContactSection";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 
-async function getData() {
-  try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/homepage`, {
-      next: { revalidate: 3600 } // Revalidate every hour
-    });
+import { 
+  fetchClasses, 
+  fetchServices, 
+  fetchEvents, 
+  fetchTestimonials, 
+  fetchInstructors
+} from "@/services/server-strapi";
 
-    if (!res.ok) {
-      throw new Error('Failed to fetch data');
-    }
-
-    return res.json();
-  } catch (error) {
-    console.error('Error fetching homepage data:', error);
-    return {
-      classes: [],
-      services: [],
-      events: [],
-      instructors: [],
-      testimonials: []
-    };
-  }
-}
+// This enables Next.js ISR - Incremental Static Regeneration
+export const revalidate = 3600; // Revalidate every hour
 
 export default async function HomePage() {
-  const {
-    classes = [],
-    services = [],
-    events = [],
-    instructors = [],
-    testimonials = []
-  } = await getData();
+  try {
+    console.log('Starting data fetch for HomePage');
+    console.log('API URL:', process.env.NEXT_PUBLIC_STRAPI_API_URL);
 
-  return (
-    <main className="relative">
-      <div className="relative">
-        <div className="absolute inset-0 bg-gradient-to-b from-purple-50/50 to-transparent pointer-events-none" />
-        <ErrorBoundary>
-          <Hero />
-        </ErrorBoundary>
-      </div>
+    // Fetch all data in parallel
+    const [
+      classesData,
+      servicesData,
+      eventsData,
+      instructorsData,
+      testimonialsData
+    ] = await Promise.all([
+      fetchClasses(),
+      fetchServices(),
+      fetchEvents(),
+      fetchInstructors(),
+      fetchTestimonials(),
+    ]);
 
-      <div className="relative z-10">
-        {classes.length > 0 && (
+    // Log data for debugging
+    console.log('HomePage Data Loaded:', {
+      classesCount: classesData.length,
+      servicesCount: servicesData.length,
+      eventsCount: eventsData.length,
+      instructorsCount: instructorsData.length,
+      testimonialsCount: testimonialsData.length
+    });
+
+    return (
+      <main className="relative">
+        <div className="relative">
+          <div className="absolute inset-0 bg-gradient-to-b from-purple-50/50 to-transparent pointer-events-none" />
           <ErrorBoundary>
-            <section className="relative">
-              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-purple-50/30 to-transparent pointer-events-none" />
-              <ClassesSection classes={classes} />
-            </section>
+            <Hero />
           </ErrorBoundary>
-        )}
+        </div>
 
-        {services.length > 0 && (
-          <ErrorBoundary>
-            <ServicesSection services={services} />
-          </ErrorBoundary>
-        )}
+        <div className="relative z-10">
+          {classesData.length > 0 && (
+            <ErrorBoundary>
+              <section className="relative">
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-purple-50/30 to-transparent pointer-events-none" />
+                <ClassesSection classes={classesData} />
+              </section>
+            </ErrorBoundary>
+          )}
 
-        {instructors.length > 0 && (
+          {servicesData.length > 0 && (
+            <ErrorBoundary>
+              <ServicesSection services={servicesData} />
+            </ErrorBoundary>
+          )}
+
+          {instructorsData.length > 0 && (
+            <ErrorBoundary>
+              <div className="relative">
+                <div className="absolute inset-0 bg-[url('/pattern.svg')] opacity-5" />
+                <InstructorsSection instructors={instructorsData} />
+              </div>
+            </ErrorBoundary>
+          )}
+
+          {eventsData.length > 0 && (
+            <ErrorBoundary>
+              <EventsSection events={eventsData} />
+            </ErrorBoundary>
+          )}
+
+          {testimonialsData.length > 0 && (
+            <ErrorBoundary>
+              <div className="relative">
+                <div className="absolute inset-0 bg-gradient-to-b from-purple-50/30 to-transparent pointer-events-none" />
+                <TestimonialsSection testimonials={testimonialsData} />
+              </div>
+            </ErrorBoundary>
+          )}
+
           <ErrorBoundary>
-            <div className="relative">
-              <div className="absolute inset-0 bg-[url('/pattern.svg')] opacity-5" />
-              <InstructorsSection instructors={instructors} />
+            <div className="relative bg-gradient-to-b from-white to-purple-50/30">
+              <ContactSection />
             </div>
           </ErrorBoundary>
-        )}
+        </div>
 
-        {events.length > 0 && (
-          <ErrorBoundary>
-            <EventsSection events={events} />
-          </ErrorBoundary>
-        )}
+        <div className="fixed inset-0 pointer-events-none overflow-hidden">
+          <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-float" />
+          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-float-delayed" />
+        </div>
 
-        {testimonials.length > 0 && (
-          <ErrorBoundary>
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-b from-purple-50/30 to-transparent pointer-events-none" />
-              <TestimonialsSection testimonials={testimonials} />
-            </div>
-          </ErrorBoundary>
-        )}
-
-        <ErrorBoundary>
-          <div className="relative bg-gradient-to-b from-white to-purple-50/30">
-            <ContactSection />
-          </div>
-        </ErrorBoundary>
+        <div className="fixed inset-0 pointer-events-none">
+          <div className="absolute inset-0 bg-gradient-to-tr from-purple-50/10 via-transparent to-pink-50/10" />
+        </div>
+      </main>
+    );
+  } catch (error) {
+    console.error('Error in HomePage:', error);
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="p-6 bg-red-50 rounded-lg mx-4">
+          <p className="text-red-600">Something went wrong loading the page.</p>
+          {process.env.NODE_ENV === 'development' && (
+            <pre className="mt-4 text-sm text-red-800">
+              {error instanceof Error ? error.message : 'Unknown error'}
+            </pre>
+          )}
+        </div>
       </div>
-
-      <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-float" />
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-float-delayed" />
-      </div>
-
-      <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute inset-0 bg-gradient-to-tr from-purple-50/10 via-transparent to-pink-50/10" />
-      </div>
-    </main>
-  );
+    );
+  }
 }
